@@ -123,8 +123,24 @@ Signature ${green}$signature${nc}
 Payload   ${green}$payload${nc}
 
 --> The port is ${green}$port${nc} and it will expire on ${red}$expires_at${nc}. <--
-
-Trying to bind the port... "
+Trying to bind the port... 
+"
+if [[ -n "$TRANSMISSION_PORT" ]]; then
+  echo "Waiting for Transmission RPC to be ready..."
+  while ! transmission-remote $TRANSMISSION_PORT --session-info &>/dev/null; do
+    echo -n "."
+    sleep 1
+  done
+  echo -ne "Setting Transmission to the port $port... "
+  transmission-remote $TRANSMISSION_PORT -p "$port"
+  # Confirm
+  current_port=$(transmission-remote $TRANSMISSION_PORT -si | grep "Listenport" | awk '{print $2}')
+  if [[ "$current_port" == "$port" ]]; then
+      echo "Success! Port is now $current_port"
+  else
+      echo "Failed to set port. Current port is $current_port"
+  fi
+fi
 
 # Now we have all required data to create a request to bind the port.
 # We will repeat this request every 15 minutes, in order to keep the port

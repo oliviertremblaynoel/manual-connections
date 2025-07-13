@@ -190,22 +190,23 @@ echo
 # Erase previous connection details if present
 rm -f /opt/piavpn-manual/token /opt/piavpn-manual/latencyList
 
-# Prompt for port forwarding if no DIP or DIP allows it
-if [[ $pfOption = "false" ]]; then
-  PIA_PF="false"
-fi
-# Check for in-line definition of PIA_PF and prompt for input
-if [[ -z $PIA_PF ]]; then
-  echo -n "Do you want a forwarding port assigned ([N]o/[y]es): "
-  read -r portForwarding
-  echo
-  if echo "${portForwarding:0:1}" | grep -iq y; then
-    PIA_PF="true"
-  fi
-fi
-if [[ $PIA_PF != "true" ]]; then
- PIA_PF="false"
-fi
+PIA_PF="true"
+# # Prompt for port forwarding if no DIP or DIP allows it
+# if [[ $pfOption = "false" ]]; then
+#   PIA_PF="false"
+# fi
+# # Check for in-line definition of PIA_PF and prompt for input
+# if [[ -z $PIA_PF ]]; then
+#   echo -n "Do you want a forwarding port assigned ([N]o/[y]es): "
+#   read -r portForwarding
+#   echo
+#   if echo "${portForwarding:0:1}" | grep -iq y; then
+#     PIA_PF="true"
+#   fi
+# fi
+# if [[ $PIA_PF != "true" ]]; then
+#  PIA_PF="false"
+# fi
 export PIA_PF
 echo -e "${green}PIA_PF=$PIA_PF${nc}"
 echo
